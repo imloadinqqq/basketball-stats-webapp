@@ -1,4 +1,4 @@
-import '../App.css';
+import '../styles/app.css';
 import { useNavigate } from 'react-router-dom';
 
 function App() {
@@ -7,12 +7,12 @@ function App() {
       <header className="Home-header">
         <p className="text-center">Welcome to my Basketball Stats application!</p>
       </header>
-      <MyButton />
+      <StatButton />
     </div>
   );
 }
 
-function MyButton() {
+function StatButton() {
   const navigate = useNavigate();
 
   const goToStats = () => {

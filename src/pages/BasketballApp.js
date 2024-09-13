@@ -1,4 +1,3 @@
-import MyButton from './App.js'
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 const NBA = require('nba');
