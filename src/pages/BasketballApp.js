@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-const NBA = require('nba');
+const nba = require('nba');
+const teamInfo = require('nba/src/team-info');
 
 function PlayerSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [player, setPlayer] = useState(null);
+  const [teamData, setTeamData] = useState(null);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    teamInfo()
+      .then((data) => {
+        console.log("Team data fetched:", data); // Debugging the team data
+        setTeamData(data);
+	  })
+		.catch((err) => setError('Failed to load team information'));
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault(); // Prevent page refresh
     try {
-      const searchedPlayer = NBA.findPlayer(searchQuery);
+      const searchedPlayer = nba.findPlayer(searchQuery);
       if (searchedPlayer) {
         setPlayer(searchedPlayer);
         setError(null);
@@ -22,6 +33,12 @@ function PlayerSearch() {
       setError('An error occurred while searching for the player');
       setPlayer(null);
     }
+  };
+
+  const getTeamName = (teamId) => {
+    if (!teamData) return 'Loading...'; // Show a loading message while data is being fetched
+    const team = teamData.find((t) => t.teamId === teamId);
+    return team ? team.teamName : 'Team not found'; // Return the team name or an error message
   };
 
   return (
@@ -39,17 +56,16 @@ function PlayerSearch() {
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {player ? (
-        <p>
-          {`${player.firstName} ${player.lastName} plays for the ${player.teamAbbreviation} and wears number ${player.jersey}.`}
-        </p>
+        <div>
+          <p>{`${player.firstName} ${player.lastName} plays for the ${player.teamId} and wears number ${player.jersey}.`}</p>
+        </div>
       ) : (
         !error && <p>Search for a player to see the info</p>
       )}
+
       <HomeButton />
     </div>
-
-  );
-}
+  );}
 
 function HomeButton() {
   const navigate = useNavigate();
