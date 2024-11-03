@@ -24,6 +24,7 @@ function PlayerSearch() {
       const searchedPlayer = nba.findPlayer(searchQuery);
       if (searchedPlayer) {
         setPlayer(searchedPlayer);
+        getTeamName(searchedPlayer.teamId);
         setError(null);
       } else {
         setError('Player not found');
@@ -34,7 +35,8 @@ function PlayerSearch() {
       setPlayer(null);
     }
   };
-
+  
+  //currently not working..
   const getTeamName = (teamId) => {
     if (!teamData) return 'Loading...'; // Show a loading message while data is being fetched
     const team = teamData.find((t) => t.teamId === teamId);
